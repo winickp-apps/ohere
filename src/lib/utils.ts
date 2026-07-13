@@ -26,7 +26,7 @@ export const STATUS_CONFIG: Record<OutreachStatus, { label: string; color: strin
 export const STAGE_OPTIONS = Object.keys(STAGE_COLORS)
 
 export const REGION_OPTIONS = [
-  'Africa (EMEA)',
+  'and Africa (EMEA)',
   'Asia-Pacific (APAC)',
   'Association of Southeast Asian Nations (ASEAN)',
   'Australasia',
