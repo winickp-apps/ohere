@@ -7,7 +7,7 @@ import type { Investor } from '@/types/investor'
 import InvestorTable from '@/components/InvestorTable'
 import InvestorPanel from '@/components/InvestorPanel'
 import AddInvestorModal from '@/components/AddInvestorModal'
-import { STATUS_CONFIG, STAGE_OPTIONS } from '@/lib/utils'
+import { STATUS_CONFIG, STAGE_OPTIONS, REGION_OPTIONS } from '@/lib/utils'
 
 const PAGE_SIZE = 50
 
@@ -22,6 +22,7 @@ export default function InvestorsPage() {
   const [page, setPage] = useState(1)
   const [filterStatus, setFilterStatus] = useState('')
   const [filterStage, setFilterStage] = useState('')
+  const [filterRegion, setFilterRegion] = useState('')
   const searchTimer = useRef<ReturnType<typeof setTimeout>>()
 
   useEffect(() => {
@@ -45,6 +46,7 @@ export default function InvestorsPage() {
     if (debouncedSearch) query = query.ilike('name', `%${debouncedSearch}%`)
     if (filterStatus) query = query.eq('outreach_status', filterStatus)
     if (filterStage) query = query.contains('investment_stages', [filterStage])
+    if (filterRegion) query = query.contains('regions', [filterRegion])
 
     const { data, count, error } = await query
     if (!error) {
@@ -52,7 +54,7 @@ export default function InvestorsPage() {
       setTotal(count ?? 0)
     }
     setLoading(false)
-  }, [page, debouncedSearch, filterStatus, filterStage])
+  }, [page, debouncedSearch, filterStatus, filterStage, filterRegion])
 
   useEffect(() => { fetchInvestors() }, [fetchInvestors])
 
@@ -88,6 +90,10 @@ export default function InvestorsPage() {
           <select value={filterStage} onChange={e => { setFilterStage(e.target.value); setPage(1) }} className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white">
             <option value="">All Stages</option>
             {STAGE_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <select value={filterRegion} onChange={e => { setFilterRegion(e.target.value); setPage(1) }} className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white">
+            <option value="">All Regions</option>
+            {REGION_OPTIONS.map(r => <option key={r} value={r}>{r}</option>)}
           </select>
           <div className="ml-auto flex items-center gap-4">
             <span className="text-sm text-gray-400">{total.toLocaleString()} investor{total !== 1 ? 's' : ''}</span>
